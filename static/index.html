@@ -37,13 +37,17 @@
             font-size: 13px;
             font-weight: 900;
         }
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+        }
     </style>
 </head>
 <body>
 
 <!-- WhatsApp flotante -->
-<a href="https://wa.me/527762292617?text=Hola%2C%20quiero%20informaci%C3%B3n%20de%20MecanixPro" target="_blank" class="fixed bottom-6 left-6 bg-[#25D366] w-16 h-16 rounded-full flex items-center justify-center text-3xl shadow-2xl z-50 hover:scale-110 transition">
-    <i class="fab fa-whatsapp"></i>
+<a href="https://wa.me/527762292617?text=Hola%2C%20quiero%20informaci%C3%B3n%20de%20MecanixPro" target="_blank" class="fixed bottom-6 left-6 bg-[#25D366] w-16 h-16 rounded-full flex items-center justify-center hover:scale-110 transition z-40">
+    <i class="fab fa-whatsapp text-2xl"></i>
 </a>
 
 <!-- ====================== LANDING PAGE ====================== -->
@@ -57,8 +61,8 @@
                 <span class="text-2xl font-black tracking-tight">MECANIX<span class="text-orange-500">PRO</span></span>
             </div>
             <div class="flex gap-4">
-                <button onclick="showFreeGuide()" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 rounded-2xl font-semibold">Guía Gratis</button>
-                <button onclick="scrollToPlans()" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 rounded-2xl font-semibold">Ver Planes</button>
+                <button onclick="showFreeGuide()" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 rounded-2xl font-semibold transition">Guía Gratis</button>
+                <button onclick="scrollToPlans()" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 rounded-2xl font-semibold transition">Ver Planes</button>
             </div>
         </div>
     </nav>
@@ -129,7 +133,7 @@
                         <p class="text-emerald-400 font-bold">Ahorras $898</p>
                         <p class="text-xs text-slate-400 mt-1">Equivale a <strong>$4.08 por día</strong></p>
                     </div>
-                    <button onclick="openPaymentModal('yearly', 1490)" class="mt-10 w-full py-5 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 rounded-2xl font-bold text-lg shadow-lg">
+                    <button onclick="openPaymentModal('yearly', 1490)" class="mt-10 w-full py-5 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 rounded-2xl font-semibold transition">
                         Elegir Anual
                     </button>
                 </div>
@@ -155,20 +159,139 @@
     </section>
 </section>
 
-<!-- Resto del sitio (Guía Gratis, Dashboard, Modal) se mantiene igual que en la versión anterior -->
+<!-- ====================== GUÍA GRATIS ====================== -->
+<section id="guideView" class="view-section">
+    <div class="min-h-screen pt-24 pb-12 px-6">
+        <div class="max-w-4xl mx-auto">
+            <button onclick="backToHome()" class="mb-8 px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded-lg font-semibold transition">
+                ← Volver al Inicio
+            </button>
+            <h1 class="text-4xl font-black mb-8">Guía Gratis: Código P0300</h1>
+            <div class="glass-card p-8 rounded-2xl">
+                <h2 class="text-2xl font-bold mb-4">¿Qué es el código P0300?</h2>
+                <p class="text-lg text-slate-300 mb-6">El código de diagnóstico P0300 se refiere a "Random/Multiple Cylinder Misfire Detected" (Fallos aleatorios/múltiples cilindros detectados).</p>
+                
+                <h2 class="text-2xl font-bold mb-4 mt-8">Causas comunes:</h2>
+                <ul class="list-disc list-inside space-y-2 text-slate-300 mb-6">
+                    <li>Bujías desgastadas</li>
+                    <li>Cables de encendido en mal estado</li>
+                    <li>Bobinas de encendido defectuosas</li>
+                    <li>Problemas en el sistema de combustible</li>
+                    <li>Válvulas EGR sucia</li>
+                    <li>Sensor de oxígeno defectuoso</li>
+                </ul>
+
+                <h2 class="text-2xl font-bold mb-4 mt-8">Soluciones recomendadas:</h2>
+                <ol class="list-decimal list-inside space-y-2 text-slate-300">
+                    <li>Reemplazar bujías</li>
+                    <li>Revisar sistema de encendido</li>
+                    <li>Limpiar inyectores</li>
+                    <li>Cambiar aceite del motor</li>
+                </ol>
+
+                <button onclick="downloadGuide()" class="mt-10 px-8 py-4 bg-emerald-600 hover:bg-emerald-500 rounded-2xl font-semibold transition">
+                    📥 Descargar Guía en PDF
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ====================== MODAL DE PAGO ====================== -->
+<div id="paymentModal" class="hidden fixed inset-0 z-50 flex items-center justify-center modal-overlay">
+    <div class="glass-card rounded-3xl p-8 max-w-md w-full mx-4">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-black">Confirmación de Pago</h2>
+            <button onclick="closePaymentModal()" class="text-3xl hover:text-orange-500 transition">&times;</button>
+        </div>
+        
+        <div id="modalPlanInfo" class="mb-8 p-6 bg-white/10 rounded-2xl">
+            <!-- Se llena dinámicamente -->
+        </div>
+
+        <form onsubmit="completePayment(event)" class="space-y-4">
+            <input type="text" placeholder="Nombre completo" required class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-slate-400">
+            <input type="email" placeholder="Correo electrónico" required class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-slate-400">
+            <input type="tel" placeholder="Teléfono" required class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-slate-400">
+            
+            <button type="submit" class="w-full py-4 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 rounded-2xl font-bold text-lg transition">
+                💳 Proceder al Pago
+            </button>
+        </form>
+    </div>
+</div>
 
 <script>
-// ==================== FUNCIONES (actualizadas con nuevos precios) ====================
+// ==================== FUNCIONES PRINCIPALES ====================
+
+// Mostrar guía gratis
+function showFreeGuide() {
+    document.getElementById('homeView').classList.remove('active');
+    document.getElementById('guideView').classList.add('active');
+}
+
+// Volver al inicio
+function backToHome() {
+    document.getElementById('guideView').classList.remove('active');
+    document.getElementById('homeView').classList.add('active');
+}
+
+// Descargar guía en PDF
+function downloadGuide() {
+    const element = document.querySelector('#guideView .glass-card');
+    const opt = {
+        margin: 10,
+        filename: 'Guia_P0300_MecanixPro.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+    };
+    html2pdf().set(opt).from(element).save();
+}
+
+// Scroll a la sección de planes
+function scrollToPlans() {
+    document.getElementById('plansSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Abrir modal de pago
 function openPaymentModal(plan, price) {
+    const planNames = {
+        'weekly': 'Semanal (7 días)',
+        'monthly': 'Mensual',
+        'yearly': 'Anual',
+        'lifetime': 'Vitalicio'
+    };
+    
     document.getElementById('modalPlanInfo').innerHTML = `
-        <p class="text-lg">Plan <strong>${plan === 'weekly' ? 'Semanal' : plan === 'monthly' ? 'Mensual' : plan === 'yearly' ? 'Anual' : 'Vitalicio'}</strong></p>
-        <p class="text-5xl font-black text-emerald-400 mt-3">$${price} MXN</p>
+        <div class="text-center">
+            <p class="text-lg text-slate-300">Plan <strong>${planNames[plan]}</strong></p>
+            <p class="text-5xl font-black text-emerald-400 mt-3">$${price.toLocaleString('es-MX')} MXN</p>
+        </div>
     `;
     document.getElementById('paymentModal').classList.remove('hidden');
     document.getElementById('paymentModal').classList.add('flex');
 }
 
-// El resto del script (showFreeGuide, completePayment, etc.) se mantiene igual que en la versión anterior
+// Cerrar modal de pago
+function closePaymentModal() {
+    document.getElementById('paymentModal').classList.add('hidden');
+    document.getElementById('paymentModal').classList.remove('flex');
+}
+
+// Completar pago
+function completePayment(event) {
+    event.preventDefault();
+    alert('✅ ¡Pago procesado correctamente! Te enviaremos un correo de confirmación.');
+    closePaymentModal();
+}
+
+// Cerrar modal al presionar Escape
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closePaymentModal();
+    }
+});
 </script>
 
 </body>
