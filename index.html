@@ -153,22 +153,78 @@
             <p class="text-center text-xs text-slate-500 mt-12">🔒 Pagos seguros con Stripe y PayPal • Cancela cuando quieras</p>
         </div>
     </section>
+
+    <section id="guideSection" class="py-20 px-6">
+        <div class="max-w-6xl mx-auto text-center">
+            <div class="inline-flex items-center gap-2 bg-slate-900/80 px-6 py-3 rounded-full mb-6 font-bold border border-slate-700">
+                <i class="fas fa-book-open text-emerald-400"></i>
+                <span>Descarga la guía gratuita</span>
+            </div>
+            <h2 class="text-4xl md:text-5xl font-black mb-4">Guía práctica para códigos P0300</h2>
+            <p class="text-slate-400 text-lg max-w-3xl mx-auto mb-8">Recibe la guía completa para detectar fallas de encendido y optimizar tus diagnósticos con pasos claros y herramientas recomendadas.</p>
+            <button onclick="showFreeGuide()" class="px-10 py-4 bg-emerald-500 hover:bg-emerald-400 rounded-2xl font-semibold transition">Abrir Guía Gratis</button>
+        </div>
+    </section>
+
+    <section id="featuresSection" class="py-20 px-6 bg-white/5">
+        <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-8">
+            <div class="glass-card rounded-3xl p-8">
+                <h3 class="text-2xl font-black mb-4">+500 códigos DTC</h3>
+                <p class="text-slate-300">Accede a explicaciones detalladas y soluciones rápidas para los códigos de diagnóstico más comunes.</p>
+            </div>
+            <div class="glass-card rounded-3xl p-8">
+                <h3 class="text-2xl font-black mb-4">Asistente con IA</h3>
+                <p class="text-slate-300">Consigue recomendaciones inteligentes para tu taller y ahorra tiempo en cada diagnóstico.</p>
+            </div>
+            <div class="glass-card rounded-3xl p-8">
+                <h3 class="text-2xl font-black mb-4">Actualizaciones constantes</h3>
+                <p class="text-slate-300">Recibe contenido nuevo cada mes para estar al día con fallas, soluciones y buenas prácticas.</p>
+            </div>
+        </div>
+    </section>
 </section>
 
-<!-- Resto del sitio (Guía Gratis, Dashboard, Modal) se mantiene igual que en la versión anterior -->
+<div id="paymentModal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/70 px-6 py-10">
+    <div class="relative w-full max-w-2xl rounded-3xl bg-slate-950/95 border border-white/10 p-8 text-white shadow-2xl">
+        <button onclick="closePaymentModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white text-2xl">&times;</button>
+        <div id="modalPlanInfo" class="text-center"></div>
+        <div class="mt-8 grid gap-4 md:grid-cols-2">
+            <button onclick="completePayment()" class="w-full rounded-2xl bg-gradient-to-r from-blue-600 to-emerald-500 py-4 font-semibold hover:opacity-90">Pagar ahora</button>
+            <button onclick="closePaymentModal()" class="w-full rounded-2xl border border-slate-600 bg-slate-900/90 py-4 font-semibold hover:bg-slate-800">Cancelar</button>
+        </div>
+        <p class="text-slate-400 text-sm text-center mt-6">Pago simulado — integra Stripe o PayPal para procesar pagos reales.</p>
+    </div>
+</div>
 
 <script>
-// ==================== FUNCIONES (actualizadas con nuevos precios) ====================
+function scrollToPlans() {
+    document.getElementById('plansSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+function showFreeGuide() {
+    window.alert('Tu guía gratuita se abrirá en breve.');
+    document.getElementById('guideSection').scrollIntoView({ behavior: 'smooth' });
+}
+
 function openPaymentModal(plan, price) {
     document.getElementById('modalPlanInfo').innerHTML = `
-        <p class="text-lg">Plan <strong>${plan === 'weekly' ? 'Semanal' : plan === 'monthly' ? 'Mensual' : plan === 'yearly' ? 'Anual' : 'Vitalicio'}</strong></p>
-        <p class="text-5xl font-black text-emerald-400 mt-3">$${price} MXN</p>
+        <h3 class="text-3xl font-black text-white mb-4">${plan === 'weekly' ? 'Semanal' : plan === 'monthly' ? 'Mensual' : plan === 'yearly' ? 'Anual' : 'Vitalicio'}</h3>
+        <p class="text-5xl font-black text-emerald-400">$${price} MXN</p>
+        <p class="text-slate-400 mt-3">Seleccionaste el plan ${plan === 'weekly' ? 'de prueba' : plan === 'monthly' ? 'mensual' : plan === 'yearly' ? 'anual' : 'vitalicio'}.</p>
     `;
     document.getElementById('paymentModal').classList.remove('hidden');
     document.getElementById('paymentModal').classList.add('flex');
 }
 
-// El resto del script (showFreeGuide, completePayment, etc.) se mantiene igual que en la versión anterior
+function closePaymentModal() {
+    document.getElementById('paymentModal').classList.add('hidden');
+    document.getElementById('paymentModal').classList.remove('flex');
+}
+
+function completePayment() {
+    closePaymentModal();
+    window.alert('Gracias. Tu orden ha sido procesada correctamente.');
+}
 </script>
 
 </body>
